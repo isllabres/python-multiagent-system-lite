@@ -2,7 +2,7 @@
 
 A minimal multi-agent system for Python development, for [OpenCode](https://opencode.ai). It
 drops onto a Python project that has already started and runs a manager → implementer →
-reviewer loop: the manager turns a request into a short list of behaviours, the implementer
+reviewer orchestration: the manager turns a request into a short list of behaviours, the implementer
 builds each one test-first, and the reviewer judges the result before it's called done.
 
 ```
