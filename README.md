@@ -73,14 +73,43 @@ remember.
 - **This layer's scripts/files are plain Markdown** — nothing to exclude from your linter or
   test discovery.
 
-## First run in a repository
+## First run in a repository: learning your commit style
 
-Before its first commit here, the implementer looks at the existing `git log`, works out this
-project's actual commit convention (subject style, prefixes, body/footer use), and writes it to
-`.opencode/commit-style.md` — then follows that file for every commit after, in this and future
-sessions. A repository with little or no history yet falls back to plain
-[Conventional Commits](https://www.conventionalcommits.org/). See the `tdd` skill for the exact
-rule; nothing to configure by hand.
+This layer has no house commit convention of its own. Before its very first commit in your
+project, the implementer stops and learns yours instead of guessing:
+
+1. **Checks for `.opencode/commit-style.md`.** If it's already there (a previous session wrote
+   it), it just reads and follows it — nothing below happens again.
+2. **Otherwise, reads your history**: `git log --format='%s%n%b%n---' -30` for the subjects and
+   bodies, plus `git log --oneline -30` to catch anything a branch name echoes into them.
+3. **Works out the pattern** actually in use, not a rubric imposed on it:
+   - subject style — length, case, mood (imperative vs. past tense), a `type:`/`type(scope):`
+     prefix, a ticket ID in brackets or a trailing footer, an emoji;
+   - whether a body is used, and for what (the "why", a `Review:`/footer line, issue
+     references);
+   - whether a ticket ID or type comes from the branch name and gets echoed into commits.
+4. **Writes it down** as a short rubric plus one real example lifted from the log, to
+   `.opencode/commit-style.md` — something like:
+
+   ```markdown
+   # Commit style (learned from this repository's history)
+
+   - Subject: imperative, lower-case start, under 72 characters, no trailing period.
+   - Prefix: none observed — plain subjects, no `type:` tag, no ticket ID.
+   - Body: used occasionally for the "why"; no footer convention observed.
+   - Example: "stop retrying 5xx responses after the third attempt"
+   ```
+
+5. **Commits that file itself**, in the convention it just derived — the one exception to
+   "write the test before the code," since this is tooling, not a behaviour. A repository with
+   fewer than five commits to learn from skips steps 2–4 and bootstraps with plain
+   [Conventional Commits](https://www.conventionalcommits.org/) instead (`type: subject`,
+   imperative, under 72 characters), noting that in the file.
+
+Every commit after — by the implementer, in this session or a later one — follows
+`.opencode/commit-style.md`, never a fresh guess. If your convention changes, or you just want
+it re-derived, delete that file and the next commit re-learns it. The exact rule lives in the
+`tdd` skill, next to the red/green/refactor cycle it also governs.
 
 ## The three agents
 
