@@ -25,7 +25,7 @@ Requirements: [OpenCode](https://opencode.ai), `git`. No particular Python toolc
 
 ```bash
 # 1. Get the layer, once
-git clone <this-repo-url> ~/code/python-multiagent-system-lite
+git clone https://github.com/isllabres/python-multiagent-system-lite.git ~/code/python-multiagent-system-lite
 
 # 2. Export a clean snapshot into your project (tracked files only)
 git -C ~/code/python-multiagent-system-lite archive HEAD .opencode AGENTS.md \
