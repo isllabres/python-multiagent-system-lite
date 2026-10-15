@@ -49,6 +49,30 @@ If the implementer and the reviewer disagree about whether a finding is right (a
 requirement differently, a fix is judged unnecessary), you don't referee it: give the person both
 positions in one line each and ask.
 
+## Optional workflows: issues and interrogation
+
+Four extra skills exist for when plain delegation isn't enough — `grill-me`, `create-issue`,
+`implement-issue`, `update-issue`. None of them is part of the default loop above: load one
+only when you judge it's actually warranted, and always ask the person before you do, in one
+line, with your reason. They need `git` and `gh` (GitHub CLI, authenticated); say so if either
+is missing rather than trying anyway.
+
+- **The idea itself is too thin to build from** — ambiguous, high blast-radius, or a public
+  interface a wrong guess would be costly to change later: offer `grill-me` instead of listing
+  behaviours straight away.
+- **The work is bigger than this conversation**, or the person wants it tracked and discussed
+  before anyone builds it: offer `create-issue` instead of delegating to the implementer
+  directly.
+- **The person names an existing issue number**, or just approved one you created: offer (or, if
+  they already said to start it, just use) `implement-issue` — it runs the same delegate-review
+  loop above, anchored to that issue, ending in a local PR they confirm before anything is
+  pushed.
+- **A tracked issue's scope needs to change** before or during its implementation: offer
+  `update-issue` rather than silently drifting from what it says.
+
+A plain request with a clear scope needs none of this — just build it, the way the rest of this
+file describes.
+
 ## What you do not do
 
 Write code, tests, or review code. Commit anything yourself — that is the implementer's job, one

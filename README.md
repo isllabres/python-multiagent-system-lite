@@ -12,10 +12,14 @@ you describe a task ──▶ manager lists behaviours ──▶ implementer bui
                                              manager reports back to you
 ```
 
-No specs, no GitHub issues, no pull requests, no wiki. The manager talks to you directly, in the
-conversation, and reports back the same way. If you outgrow this,
+By default: no specs, no GitHub issues, no pull requests, no wiki. The manager talks to you
+directly, in the conversation, and reports back the same way. Four optional skills
+(`grill-me`, `create-issue`, `implement-issue`, `update-issue`) add a plain GitHub-issue-and-PR
+flow on top of the same three roles, for a request that's worth tracking or interrogating
+before anyone builds it — the manager only reaches for one after asking you, never on its own.
+If you outgrow even that,
 [python-multiagent-system](https://github.com/isllabres/python-multiagent-system) adds
-spec-driven changes, GitHub issues/PRs and a generated wiki on top of the same three roles.
+spec-driven (OpenSpec) changes and a generated wiki on top of the same idea.
 
 ## Install into an existing project
 
@@ -125,13 +129,28 @@ they all share.
 ## Skills
 
 - **`tdd`** — the red/green/refactor cycle, commit granularity, and the first-run commit-style
-  bootstrap described above.
+  bootstrap described above. Always in play.
 - **`python-standards`** — the shared rubric for good Python: the implementer writes to it, the
-  reviewer checks the diff against it. The project's own conventions always win over the rubric.
+  reviewer checks the diff against it. The project's own conventions always win over the
+  rubric. Always in play.
+- **`grill-me`** *(optional)* — one question at a time, each with a recommendation, until every
+  decision a thin or risky idea depends on is pinned down. The manager performs this itself.
+- **`create-issue`** *(optional)* — turns an idea into a GitHub issue: a summary, a behaviour
+  checklist, what's out of scope, what's still open. You approve the issue before it's filed.
+- **`implement-issue`** *(optional)* — runs the normal manager → implementer → reviewer loop
+  anchored to an existing issue's checklist, ticking it off as it goes, and ends at a local PR
+  you confirm before anything is pushed.
+- **`update-issue`** *(optional)* — changes a filed issue's checklist or description, with the
+  difference shown to you before it's edited.
+
+The four optional ones need `git` and `gh` (GitHub CLI, authenticated); nothing else in this
+layer does. The manager never loads one without telling you first and getting a go-ahead — see
+"Optional workflows" in `.opencode/agent/manager.md`.
 
 ## Scope
 
-This is the pared-down version on purpose: no issue tracker integration, no PR automation, no
-generated documentation. The manager reports back in the conversation; nothing is filed
-anywhere. Three rounds of review is a hard cap — past that, the manager stops and asks you
-instead of looping on its own judgment.
+By default, no issue tracker integration, no PR automation, no generated documentation: the
+manager reports back in the conversation and nothing is filed anywhere. The four optional
+skills above add a GitHub issue/PR flow on top, one request at a time, only with your
+go-ahead — never silently, never by default. Three rounds of review is a hard cap either way —
+past that, the manager stops and asks you instead of looping on its own judgment.

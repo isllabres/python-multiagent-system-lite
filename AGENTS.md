@@ -26,6 +26,7 @@ build.
 | `.opencode/agent/*.md` | The three agents | When you delegate to one |
 | `.opencode/skills/tdd/` | Red/green/refactor, commit rules, the first-run commit-style bootstrap | Before implementing or reviewing |
 | `.opencode/skills/python-standards/` | The Python rubric | Before writing or reviewing code |
+| `.opencode/skills/grill-me/`, `create-issue/`, `implement-issue/`, `update-issue/` | The optional GitHub-issue workflow | Only when the manager decides one is warranted, and only after asking you |
 | `.opencode/commit-style.md` | This repository's own commit convention, learned on first use | Before every commit |
 
 ## The loop
@@ -40,7 +41,10 @@ request ──▶ manager lists behaviours ──▶ implementer builds test-fir
 
 No gate beyond the conversation itself: nothing is filed, branched by convention, or opened as a
 pull request automatically. The implementer commits as it goes; what you do with the result
-(open a PR, merge it, discard it) is yours to decide.
+(open a PR, merge it, discard it) is yours to decide. The optional `create-issue` /
+`implement-issue` / `update-issue` skills run this same loop anchored to a GitHub issue, ending
+in a local PR you confirm — but the manager only reaches for them after asking you, never as
+the default path.
 
 ## Three agents, each with one job
 
