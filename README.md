@@ -129,7 +129,7 @@ it re-derived, delete that file and the next commit re-learns it. The exact rule
 |---|---|---|---|
 | `manager` | primary | Turning the request into behaviours, delegating, relaying review rounds (≤3), reporting back | Code, tests, judging code |
 | `implementer` | subagent | Tests first, then the code, one behaviour at a time; every commit | Scope decisions, review verdicts |
-| `reviewer` | subagent | Judging the diff against `python-standards`, an `APPROVED`/`CHANGES_REQUESTED` verdict | Code, tests, commits |
+| `reviewer` | subagent | Judging the diff against the person's original request and `python-standards`, an `APPROVED`/`CHANGES_REQUESTED` verdict | Code, tests, commits |
 
 See `.opencode/agent/*.md` for each one's full instructions, and `AGENTS.md` for the contract
 they all share.

@@ -8,8 +8,8 @@ they are needed.
 
 A change can pass every test and still be the wrong change, or be written so badly that the next
 one breaks it. Three specialised agents catch that difference: a manager who decides scope, an
-implementer who builds test-first, and a reviewer who judges the result against a shared Python
-rubric — each with one job, never the others'.
+implementer who builds test-first, and a reviewer who judges the result against both the
+person's original request and a shared Python rubric — each with one job, never the others'.
 
 ## A layer, not a project template
 

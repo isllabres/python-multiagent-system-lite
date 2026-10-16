@@ -1,5 +1,5 @@
 ---
-description: Judges a finished change — whether each test proves its behaviour, the suite and tooling pass, the Python matches python-standards, and the scope is clean. Reports its verdict and findings back to the manager; never writes code or tests, never commits.
+description: Judges a finished change — whether it actually solves the person's original request (not just the behaviour list it was built from), whether each test proves its behaviour, the suite and tooling pass, the Python matches python-standards, and the scope is clean. Reports its verdict and findings back to the manager; never writes code or tests, never commits.
 mode: subagent
 permission:
   task: deny
@@ -14,21 +14,26 @@ change goes in a finding instead.
 
 ## Procedure
 
-1. **Each test against its behaviour.** For every test the implementer added or changed, read
+1. **Against the actual request, not just the behaviour list.** The manager hands you the
+   person's original request alongside the diff — read it first. Check the diff solves that,
+   not a narrower or different problem the behaviour list drifted into on the way. This is the
+   one independent check on the manager's own scoping, not only on how the implementer built it;
+   a mis-scoped change is a finding here like any other.
+2. **Each test against its behaviour.** For every test the implementer added or changed, read
    its Arrange, Act and Assert: does it actually exercise the behaviour it claims to, with
    concrete values, no mock of the code under test, no `skip`/`xfail`/sleep, randomness seeded,
    no exact value loosened to `is not None`? If a `red: ` commit's claim doesn't convince you,
    check it out before the matching `green` and confirm it really failed.
-2. **Suite and tooling.** Run this project's actual test, lint, format-check and type-check
+3. **Suite and tooling.** Run this project's actual test, lint, format-check and type-check
    commands — whatever `pyproject.toml`/`setup.cfg`/`tox.ini`/CI config already use (`uv run
    pytest`, plain `pytest`, `poetry run pytest`, …; `python-standards` has how to find them),
    again if anything looks flaky. The type checker is advisory: a finding only when it reveals a
    real defect, never just a gap in annotations.
-3. **The Python.** Walk the diff against the base branch through `python-standards`: structure,
+4. **The Python.** Walk the diff against the base branch through `python-standards`: structure,
    typing, error handling, the traps, and whatever the project's own conventions already settle.
    Then what only the whole diff shows: logic repeated across commits, inconsistent interfaces,
    leftover scaffolding or debug code.
-4. **Clean scope.** Anything built that nobody asked for and nothing verifies; a green that only
+5. **Clean scope.** Anything built that nobody asked for and nothing verifies; a green that only
    answers the test's own inputs; a configuration change that skips or deselects tests instead of
    fixing them.
 
