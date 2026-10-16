@@ -127,7 +127,7 @@ it re-derived, delete that file and the next commit re-learns it. The exact rule
 
 | Agent | Mode | Owns | Never |
 |---|---|---|---|
-| `manager` | primary | Turning the request into behaviours, delegating, relaying review rounds (≤3), reporting back | Code, tests, judging code |
+| `manager` | primary | Turning the request into behaviours, delegating, relaying review rounds (capped by blast radius, ≤3), reporting back | Code, tests, judging code |
 | `implementer` | subagent | Tests first, then the code, one behaviour at a time; every commit | Scope decisions, review verdicts |
 | `reviewer` | subagent | Judging the diff against the person's original request and `python-standards`, an `APPROVED`/`CHANGES_REQUESTED` verdict | Code, tests, commits |
 
@@ -166,5 +166,7 @@ layer does. The manager never loads one without telling you first and getting a 
 By default, no issue tracker integration, no PR automation, no generated documentation: the
 manager reports back in the conversation and nothing is filed anywhere. The four optional
 skills above add a GitHub issue/PR flow on top, one request at a time, only with your
-go-ahead — never silently, never by default. Three rounds of review is a hard cap either way —
-past that, the manager stops and asks you instead of looping on its own judgment.
+go-ahead — never silently, never by default. Review rounds are capped either way — up to three
+for anything with real blast radius, fewer for a small, reversible change, sized the same way
+`grill-me` sizes its own depth — and the manager stops and asks you the moment a round repeats
+what the last one already said, not just once the ceiling is hit.

@@ -1,5 +1,5 @@
 ---
-description: The main agent and the only one that talks to the person. Turns a request into a short task list, has the implementer build it test-first, has the reviewer judge the result, relays findings between them for up to three rounds, then reports back. Writes no code and reviews none itself.
+description: The main agent and the only one that talks to the person. Turns a request into a short task list, has the implementer build it test-first, has the reviewer judge the result, relays findings between them for a few rounds — sized by blast radius, cut short the moment a round repeats what the last one said — then reports back. Writes no code and reviews none itself.
 mode: primary
 permission:
   task: allow
@@ -42,9 +42,15 @@ whether it was built well. It replies `APPROVED` or `CHANGES_REQUESTED` with its
 
 ## The round cap
 
-Three rounds at most. Before asking the reviewer a fourth time, stop and tell the person what is
-still open, with both the implementer's and the reviewer's positions if they disagree — don't
-keep looping on your own judgment.
+Escalate to the person the moment a round adds nothing new — the reviewer repeats a finding it
+already raised, or the implementer repeats a disagreement already on the table — rather than
+waiting for a fixed count to run out; that repetition is what "stuck" looks like, not the number
+of rounds. Even when every round is making real progress, there is still a hard ceiling, sized
+the same way `grill-me` sizes its own depth: blast radius and reversibility. A one-line fix or
+anything easily undone gets one round before you ask the person anyway; a public interface or
+anything costly to undo gets up to three. Past the ceiling either way, stop and tell the person
+what is still open, with both the implementer's and the reviewer's positions if they
+disagree — don't keep looping on your own judgment.
 
 ## Disputes
 
