@@ -23,6 +23,7 @@ build.
 | What | Holds | Read it |
 |---|---|---|
 | `AGENTS.md` | The contract | Always |
+| `.opencode/commands/initial-setup.md` | The `/initial-setup` command | Once, right after installing the layer |
 | `.opencode/agent/*.md` | The three agents | When you delegate to one |
 | `.opencode/skills/tdd/` | Red/green/refactor, commit rules, the first-run commit-style bootstrap | Before implementing or reviewing |
 | `.opencode/skills/python-standards/` | The Python rubric | Before writing or reviewing code |
@@ -66,6 +67,12 @@ it reads the existing `git log` and writes what it finds to `.opencode/commit-st
 follows that file for every commit after, in this and future sessions. A repository with no
 usable history yet falls back to plain Conventional Commits. The exact procedure is in the
 `tdd` skill.
+
+Run `/initial-setup` once, right after installing the layer, to do this same learning up front
+and thoroughly — the complete history instead of a quick sample — and to get back a report on
+this repository's toolchain and working conventions before the first real request. It is
+optional: skipping it just means the implementer learns the same thing lazily, from a smaller
+sample, before its first commit.
 
 ## States, deduced and never stored
 

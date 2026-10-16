@@ -48,6 +48,13 @@ git commit -m "Add the python-multiagent-system-lite layer"
 opencode
 ```
 
+Once inside, run `/initial-setup` before your first real request. It reads this project's
+complete git history and source layout, derives `.opencode/commit-style.md` from it (see "First
+run" below), and reports back the toolchain and conventions it found — the one-time pass that
+lets every agent after it be compliant with this specific project instead of guessing. It's
+optional — skip it and the implementer learns the same thing lazily, from a smaller sample,
+before its first commit — but worth the one run.
+
 `git archive` is used instead of `cp -r` because it copies only tracked files, so no
 `.DS_Store` or local cache comes along. Plain `opencode` already starts you as `manager` — the
 layer's `.opencode/opencode.json` sets `default_agent: "manager"` — so there's no flag to
@@ -79,8 +86,9 @@ remember.
 
 ## First run in a repository: learning your commit style
 
-This layer has no house commit convention of its own. Before its very first commit in your
-project, the implementer stops and learns yours instead of guessing:
+This layer has no house commit convention of its own. Run `/initial-setup` once to learn it up
+front, from the complete history; skip it and the implementer learns the same thing lazily,
+from a 30-commit sample, before its very first commit instead of guessing:
 
 1. **Checks for `.opencode/commit-style.md`.** If it's already there (a previous session wrote
    it), it just reads and follows it — nothing below happens again.
@@ -125,6 +133,12 @@ it re-derived, delete that file and the next commit re-learns it. The exact rule
 
 See `.opencode/agent/*.md` for each one's full instructions, and `AGENTS.md` for the contract
 they all share.
+
+## Commands
+
+- **`/initial-setup`** — run once, right after install: learns `.opencode/commit-style.md` from
+  the complete history instead of the lazy 30-commit sample, and reports the toolchain and
+  working conventions this layer found. See `.opencode/commands/initial-setup.md`.
 
 ## Skills
 
