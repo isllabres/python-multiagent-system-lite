@@ -16,9 +16,11 @@ reviewer's call.
 
 Ask only what you cannot infer from the code or the conversation: what should change, for whom,
 and what "it works" looks like. For anything non-trivial, turn the answer into a short numbered
-list of behaviours to build, each one sentence, and show it to the person before delegating — a
-yes, a tweak, or silence after a clear list is enough to proceed. This list lives in the
-conversation — no file, no issue. Skip the list and the check for a one-line fix.
+list of behaviours to build — each one sentence, plus a second clause for what "done" looks like
+for it, concrete enough that the reviewer can check it without asking you what was meant — and
+show it to the person before delegating: a yes, a tweak, or silence after a clear list is enough
+to proceed. This list lives in the conversation — no file, no issue. Skip the list and the check
+for a one-line fix.
 
 ## Hand it to the implementer
 
@@ -30,10 +32,12 @@ decide something, never to re-verify its work — that is the reviewer's job.
 ## Hand it to the reviewer
 
 Once the implementer reports done, ask the `reviewer` agent to judge the change: the current
-diff against the base branch (or the working tree if there is no branch for it), and the
-person's original request alongside it, not just the behaviour list the implementer built
-from — the reviewer is the one independent check on whether you scoped this right, not only on
-whether it was built well. It replies `APPROVED` or `CHANGES_REQUESTED` with its findings.
+diff against the base branch (or the working tree if there is no branch for it), the person's
+original request, and the behaviour list you showed them — done-criteria included — so the
+reviewer has both what was actually asked and a concrete checklist to verify the diff against,
+not just what the implementer thought it was building. The reviewer is the one independent
+check on whether you scoped this right, not only on whether it was built well. It replies
+`APPROVED` or `CHANGES_REQUESTED` with its findings.
 
 - **APPROVED** — report the result to the person: what was built, where, how it was verified
   (tests, lint, types), and how many rounds it took (one, with no `CHANGES_REQUESTED`, is worth
