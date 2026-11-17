@@ -181,3 +181,53 @@ go-ahead — never silently, never by default. Review rounds are capped either w
 for anything with real blast radius, fewer for a small, reversible change, sized the same way
 `grill-me` sizes its own depth — and the manager stops and asks you the moment a round repeats
 what the last one already said, not just once the ceiling is hit.
+
+## Reliability patterns this layer follows
+
+Checked against two Anthropic pieces on building agent automations that actually hold
+up — [Claude Managed Agents](https://claude.com/resources/articles/claude-managed-agents) and
+[Building effective agent automations](https://claude.dev/blog/building-effective-agent-automations/).
+Most of the first one's platform machinery (vaults, managed cloud sandboxes, cron deployments,
+"dreaming") doesn't transfer to a local, markdown-defined layer; its principles, and most of the
+second piece's failure modes for an agent with its own persistent state, mostly already did.
+
+**Already here:**
+
+- **One orchestrator, no peer-to-peer agents.** The implementer and reviewer never talk to each
+  other directly (`task: deny` on both); every handoff goes through the manager, the only agent
+  the person talks to. No coordination explosion, no agent improvising a message to another
+  behind your back.
+- **Grounded verification, not self-report.** The reviewer re-runs the project's actual test,
+  lint and type-check commands itself rather than trusting the implementer's claim that they
+  pass — the same "re-verify against the live source before acting" principle a long-running
+  agent needs for anything it reports as true.
+- **Bounded, blast-radius-sized rounds.** Review rounds escalate to the person the moment one
+  repeats what the last one said, and the ceiling itself scales with how risky the change is
+  (`grill-me`'s own heuristic) — not a flat retry count treating a one-line fix and a public
+  interface the same way.
+- **Human confirmation before the expensive part.** The manager shows its behaviour list before
+  delegating; a yes, a tweak, or silence is enough, but nothing gets built on a guess about scope
+  nobody confirmed.
+- **Least-privilege per role.** Permissions are scoped in each agent's own frontmatter
+  (`task: deny` for implementer and reviewer, `webfetch`/`websearch` only where a role needs
+  them), not one shared, maximal permission set.
+- **A bookmark, not a fixed window.** `/log-usage` dedupes by session id already logged, so
+  re-running it never double-counts or needs a time range to stay correct.
+- **Short output on purpose.** Findings are capped at a few real ones ("three real findings beat
+  thirty nitpicks"), and reports stay to a line or two — what changes a decision, not everything
+  that happened.
+
+**Added to close gaps these pieces named:**
+
+- **Untrusted content is data, not instructions** (`AGENTS.md`, all three agents) — a comment,
+  commit message, or issue body trying to steer a verdict or scope is a finding, never a command
+  followed.
+- **A failed read is never silent** (`.opencode/scripts/log_usage.py`) — a session the logger
+  couldn't export now shows up in its summary as "N session(s) could not be read," not as a run
+  indistinguishable from a quiet one.
+- **A stated done-criterion per behaviour**, not just a one-sentence label — handed to the
+  reviewer alongside the request, so "does this meet what was asked" has something concrete to
+  check per behaviour instead of a judgment call reconstructed from a label.
+- **A commit only counts as done once it's confirmed landed** (`tdd` skill) — `git log -1` /
+  `git status`, not just the tool call returning without an error, since a rejected pre-commit
+  hook can look like success from the implementer's own side.
