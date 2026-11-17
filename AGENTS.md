@@ -14,9 +14,11 @@ person's original request and a shared Python rubric — each with one job, neve
 ## A layer, not a project template
 
 This system creates no `src/`, `tests/`, or any directory of your project; it adapts to the
-project at hand. The only things it writes on its own are `.opencode/commit-style.md` (learned
-once, on first use) and, of course, whatever source and test files the implementer is asked to
-build.
+project at hand. The only things an agent writes on its own are `.opencode/commit-style.md`
+(learned once, on first use) and, of course, whatever source and test files the implementer is
+asked to build. Separately — no agent judgment involved, a plain script — `/log-usage` appends
+this deployment's own OpenCode cost and token usage to `.opencode/token-usage.jsonl`, local and
+git-ignored; see "Token usage, logged locally" below.
 
 ## The map — read what you need, when you need it
 
@@ -24,11 +26,14 @@ build.
 |---|---|---|
 | `AGENTS.md` | The contract | Always |
 | `.opencode/commands/initial-setup.md` | The `/initial-setup` command | Once, right after installing the layer |
+| `.opencode/commands/log-usage.md` | The `/log-usage` command | Whenever you want this deployment's usage log updated |
 | `.opencode/agent/*.md` | The three agents | When you delegate to one |
 | `.opencode/skills/tdd/` | Red/green/refactor, commit rules, the first-run commit-style bootstrap | Before implementing or reviewing |
 | `.opencode/skills/python-standards/` | The Python rubric | Before writing or reviewing code |
 | `.opencode/skills/grill-me/`, `create-issue/`, `implement-issue/`, `update-issue/` | The optional GitHub-issue workflow | Only when the manager decides one is warranted, and only after asking you |
 | `.opencode/commit-style.md` | This repository's own commit convention, learned on first use | Before every commit |
+| `.opencode/scripts/log_usage.py` | The usage logger `/log-usage` runs | Never read directly — run it |
+| `.opencode/token-usage.jsonl` | This deployment's own cost/token history, local and git-ignored | For comparing usage across changes to this layer |
 
 ## The loop
 
@@ -73,6 +78,17 @@ and thoroughly — the complete history instead of a quick sample — and to get
 this repository's toolchain and working conventions before the first real request. It is
 optional: skipping it just means the implementer learns the same thing lazily, from a smaller
 sample, before its first commit.
+
+## Token usage, logged locally
+
+Run `/log-usage` (or `python .opencode/scripts/log_usage.py` directly) whenever you want this
+deployment's own OpenCode session history folded into `.opencode/token-usage.jsonl` — one line
+per session, cost and token counts read straight from `opencode session export`, nothing
+estimated or self-reported by a model. It exists to compare *this* deployment's spend over
+time — before and after a model swap, a cheaper default per agent, a caching change — never to
+feed a model's own judgment about cost. Local and git-ignored: it never leaves this machine and
+never shows up as a diff. `session list` only surfaces top-level sessions, so a subagent's own
+child session may be missing from the totals; `--session-id` logs one by hand as a fallback.
 
 ## States, deduced and never stored
 

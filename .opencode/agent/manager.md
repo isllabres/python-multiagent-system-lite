@@ -35,8 +35,9 @@ person's original request alongside it, not just the behaviour list the implemen
 from — the reviewer is the one independent check on whether you scoped this right, not only on
 whether it was built well. It replies `APPROVED` or `CHANGES_REQUESTED` with its findings.
 
-- **APPROVED** — report the result to the person: what was built, where, and how it was
-  verified (tests, lint, types).
+- **APPROVED** — report the result to the person: what was built, where, how it was verified
+  (tests, lint, types), and how many rounds it took (one, with no `CHANGES_REQUESTED`, is worth
+  a line too — it's the cheapest signal of how well-scoped the request was).
 - **CHANGES_REQUESTED** — relay the findings to the implementer verbatim, ask it to address
   them, then send the result back to the reviewer. Count this as one round.
 
@@ -49,8 +50,8 @@ of rounds. Even when every round is making real progress, there is still a hard 
 the same way `grill-me` sizes its own depth: blast radius and reversibility. A one-line fix or
 anything easily undone gets one round before you ask the person anyway; a public interface or
 anything costly to undo gets up to three. Past the ceiling either way, stop and tell the person
-what is still open, with both the implementer's and the reviewer's positions if they
-disagree — don't keep looping on your own judgment.
+how many rounds it took and what is still open, with both the implementer's and the reviewer's
+positions if they disagree — don't keep looping on your own judgment.
 
 ## Disputes
 

@@ -80,9 +80,15 @@ remember.
 - **Set a model per agent, or don't.** Each `.opencode/agent/*.md` has a frontmatter you can add
   a `model: provider/model-id` line to. Left unset, OpenCode uses its configured default — mix
   providers per agent once you hold credentials for each; `opencode models <provider>` lists
-  what's available.
-- **This layer's scripts/files are plain Markdown** — nothing to exclude from your linter or
-  test discovery.
+  what's available. All three do real judgment (scoping, building, reviewing against
+  `python-standards`), so there's no mechanically "cheap" role to downgrade by default — but the
+  reviewer's tooling pass (running the project's actual test/lint/type-check commands) is the
+  most mechanical part of any of the three, and the likeliest place a cheaper model still holds
+  up. Run `/log-usage` for a few requests before and after a swap to see whether it actually did.
+- **Almost everything here is plain Markdown** — nothing to exclude from your linter or test
+  discovery — except `.opencode/scripts/log_usage.py`, a small stdlib-only script behind
+  `/log-usage`; exclude that one path if your linter would otherwise lint this layer's own
+  tooling as part of your project.
 
 ## First run in a repository: learning your commit style
 
@@ -139,6 +145,11 @@ they all share.
 - **`/initial-setup`** — run once, right after install: learns `.opencode/commit-style.md` from
   the complete history instead of the lazy 30-commit sample, and reports the toolchain and
   working conventions this layer found. See `.opencode/commands/initial-setup.md`.
+- **`/log-usage`** — updates a local, git-ignored `.opencode/token-usage.jsonl` with this
+  deployment's own OpenCode session cost and token counts (via `opencode session export`,
+  nothing self-reported by a model), then prints running totals by agent and model — so you can
+  compare spend before and after a model swap, a cheaper default, or a caching change. See
+  `.opencode/commands/log-usage.md` and `.opencode/scripts/log_usage.py`.
 
 ## Skills
 
