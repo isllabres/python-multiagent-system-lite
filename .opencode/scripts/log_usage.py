@@ -72,10 +72,13 @@ def _session_record(session_id: str) -> dict:
     }
 
 
-def collect(log_path: Path, extra_session_ids: list[str] | None = None) -> list[dict]:
+def collect(
+    log_path: Path, extra_session_ids: list[str] | None = None
+) -> tuple[list[dict], list[tuple[str, str]]]:
     already_logged = _logged_session_ids(log_path)
     candidate_ids = _list_session_ids() + (extra_session_ids or [])
     new_records = []
+    skipped: list[tuple[str, str]] = []
     for session_id in candidate_ids:
         if session_id in already_logged:
             continue
@@ -83,12 +86,12 @@ def collect(log_path: Path, extra_session_ids: list[str] | None = None) -> list[
             new_records.append(_session_record(session_id))
             already_logged.add(session_id)
         except (subprocess.CalledProcessError, KeyError, json.JSONDecodeError) as exc:
-            print(f"skipped {session_id}: {exc}", file=sys.stderr)
+            skipped.append((session_id, str(exc)))
     if new_records:
         with log_path.open("a") as f:
             for record in new_records:
                 f.write(json.dumps(record) + "\n")
-    return new_records
+    return new_records, skipped
 
 
 def summarize(log_path: Path) -> None:
@@ -143,13 +146,20 @@ def main() -> None:
         summarize(args.log_path)
         return
 
-    records = collect(args.log_path, extra_session_ids=args.session_ids)
-    if not records:
+    records, skipped = collect(args.log_path, extra_session_ids=args.session_ids)
+    for session_id, reason in skipped:
+        print(f"could not read session {session_id}: {reason}", file=sys.stderr)
+    if not records and not skipped:
         print("No new sessions to log.")
         return
     for record in records:
         agents = ",".join(record["agents"]) or "unknown agent"
         print(f"logged {record['session_id']} ({agents}, {record['model']}): cost={record['cost']} tokens={record['tokens']}")
+    if skipped:
+        print(
+            f"{len(skipped)} session(s) could not be read (see stderr above) - "
+            "totals above and in --summary are incomplete until this is resolved."
+        )
 
 
 if __name__ == "__main__":

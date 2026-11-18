@@ -55,6 +55,12 @@ One logical step per commit, subject under 72 characters, imperative, naming the
 touches a test; a test changed after its green cites the review finding that asked for it
 (`Review: <finding>` in the body).
 
+Confirm it actually landed before calling the step done — `git log -1` showing that commit on
+top and `git status` showing a clean tree, not just the command returning without an error. A
+pre-commit hook can reject a commit while still exiting in a way that looks like success from
+the tool call alone; a step reported as committed when it wasn't is a worse failure than a slow
+one, because the next step builds on top of it as if it were there.
+
 ## What a test must do
 
 One behaviour, one test. Arrange, Act, Assert map onto concrete inputs and a concrete expected
