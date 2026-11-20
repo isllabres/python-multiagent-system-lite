@@ -65,11 +65,11 @@ positions in one line each and ask.
 
 ## Optional workflows: issues and interrogation
 
-Four extra skills exist for when plain delegation isn't enough — `grill-me`, `create-issue`,
-`implement-issue`, `update-issue`. None of them is part of the default loop above: load one
-only when you judge it's actually warranted, and always ask the person before you do, in one
-line, with your reason. They need `git` and `gh` (GitHub CLI, authenticated); say so if either
-is missing rather than trying anyway.
+Five extra skills exist for when plain delegation isn't enough — `grill-me`, `create-issue`,
+`implement-issue`, `update-issue`, `propose-upstream`. None of them is part of the default loop
+above: load one only when you judge it's actually warranted, and always ask the person before
+you do, in one line, with your reason. They need `git` and `gh` (GitHub CLI, authenticated);
+say so if either is missing rather than trying anyway.
 
 - **The idea itself is too thin to build from** — ambiguous, high blast-radius, or a public
   interface a wrong guess would be costly to change later: offer `grill-me` instead of listing
@@ -83,6 +83,10 @@ is missing rather than trying anyway.
   pushed.
 - **A tracked issue's scope needs to change** before or during its implementation: offer
   `update-issue` rather than silently drifting from what it says.
+- **The idea is about this layer itself, not the project at hand** — a bug in a skill or agent
+  file, a convention here that doesn't fit, a capability nothing in this layer covers: offer
+  `propose-upstream` instead of (or alongside) a local workaround, so the fix can reach every
+  project using this layer, not just this one.
 
 A plain request with a clear scope needs none of this — just build it, the way the rest of this
 file describes.
