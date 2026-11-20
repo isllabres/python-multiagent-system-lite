@@ -13,11 +13,14 @@ you describe a task ──▶ manager lists behaviours ──▶ implementer bui
 ```
 
 By default: no specs, no GitHub issues, no pull requests, no wiki. The manager talks to you
-directly, in the conversation, and reports back the same way. Four optional skills
-(`grill-me`, `create-issue`, `implement-issue`, `update-issue`) add a plain GitHub-issue-and-PR
-flow on top of the same three roles, for a request that's worth tracking or interrogating
-before anyone builds it — the manager only reaches for one after asking you, never on its own.
-If you outgrow even that,
+directly, in the conversation, and reports back the same way. Five optional skills
+(`grill-me`, `create-issue`, `implement-issue`, `update-issue`, `propose-upstream`) add a plain
+GitHub-issue-and-PR flow on top of the same three roles, for a request that's worth tracking or
+interrogating before anyone builds it — the manager only reaches for one after asking you, never
+on its own. This repository is the one source of truth for the layer itself: `/update-layer`
+pulls a newer tagged release into a project that installed it, and `propose-upstream` sends an
+idea about the layer back here as an issue — see "Staying up to date" below. If you outgrow even
+that,
 [python-multiagent-system](https://github.com/isllabres/python-multiagent-system) adds
 spec-driven (OpenSpec) changes and a generated wiki on top of the same idea.
 
@@ -150,6 +153,10 @@ they all share.
   nothing self-reported by a model), then prints running totals by agent and model — so you can
   compare spend before and after a model swap, a cheaper default, or a caching change. See
   `.opencode/commands/log-usage.md` and `.opencode/scripts/log_usage.py`.
+- **`/update-layer`** — checks the repo named in `.opencode/layer.json` for a newer tagged
+  release and, if there is one, pulls `.opencode/` and `AGENTS.md` from it. Nothing is
+  committed; the result is a plain diff to review. See `.opencode/commands/update-layer.md` and
+  `.opencode/scripts/update_layer.py`.
 
 ## Skills
 
@@ -167,15 +174,42 @@ they all share.
   you confirm before anything is pushed.
 - **`update-issue`** *(optional)* — changes a filed issue's checklist or description, with the
   difference shown to you before it's edited.
+- **`propose-upstream`** *(optional)* — turns an idea about this layer itself (not the project
+  it's installed in) into an issue filed against the repo named in `.opencode/layer.json`, so a
+  fix found in one project can reach every project using this layer.
 
-The four optional ones need `git` and `gh` (GitHub CLI, authenticated); nothing else in this
+The five optional ones need `git` and `gh` (GitHub CLI, authenticated); nothing else in this
 layer does. The manager never loads one without telling you first and getting a go-ahead — see
 "Optional workflows" in `.opencode/agent/manager.md`.
+
+## Staying up to date, and sending improvements back
+
+This repository is the one place this layer's own definition lives. Every project that
+installed it is a snapshot of some tagged release, recorded in `.opencode/layer.json`
+(`{"repo": "...", "version": "v0.1.0"}`) — written the moment you install, and kept current by
+`/update-layer` after that.
+
+- **Pulling an update** — run `/update-layer`. It lists the tags on the repo named in
+  `layer.json` with a plain `git ls-remote` (no clone, no auth needed for a public repo), and if
+  a newer one exists, downloads that tag's public GitHub archive and overwrites `.opencode/` and
+  `AGENTS.md` with it. `.opencode/commit-style.md` and `.opencode/token-usage.jsonl` are never
+  touched — they're this project's own state, not part of the layer. Nothing is committed for
+  you; review the result like any other change, especially `.opencode/opencode.json` if you've
+  customized its permissions, since an update overwrites it wholesale.
+- **Sending an idea back** — when something found in one project is really about the layer
+  itself rather than that project's own code, the manager can offer `propose-upstream`: the same
+  discovery-then-approve shape `create-issue` already uses, aimed at the repo named in
+  `layer.json` instead of the project at hand, so the fix reaches every project using this
+  layer, not just this one.
+
+Cutting a release, from this repository's own side, is a plain `git tag vX.Y.Z && git push
+--tags` (or `gh release create vX.Y.Z`) once `main` is where you want it — nothing here needs
+CI, a build step, or anything beyond the tag itself.
 
 ## Scope
 
 By default, no issue tracker integration, no PR automation, no generated documentation: the
-manager reports back in the conversation and nothing is filed anywhere. The four optional
+manager reports back in the conversation and nothing is filed anywhere. The five optional
 skills above add a GitHub issue/PR flow on top, one request at a time, only with your
 go-ahead — never silently, never by default. Review rounds are capped either way — up to three
 for anything with real blast radius, fewer for a small, reversible change, sized the same way

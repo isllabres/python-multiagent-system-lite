@@ -16,9 +16,11 @@ person's original request and a shared Python rubric — each with one job, neve
 This system creates no `src/`, `tests/`, or any directory of your project; it adapts to the
 project at hand. The only things an agent writes on its own are `.opencode/commit-style.md`
 (learned once, on first use) and, of course, whatever source and test files the implementer is
-asked to build. Separately — no agent judgment involved, a plain script — `/log-usage` appends
+asked to build. Separately — no agent judgment involved, plain scripts — `/log-usage` appends
 this deployment's own OpenCode cost and token usage to `.opencode/token-usage.jsonl`, local and
-git-ignored; see "Token usage, logged locally" below.
+git-ignored, and `/update-layer` overwrites `.opencode/` and `AGENTS.md` from a newer tagged
+release and updates `.opencode/layer.json` to match; see "Token usage, logged locally" and
+"Staying up to date, and sending improvements back" below.
 
 ## The map — read what you need, when you need it
 
@@ -30,10 +32,12 @@ git-ignored; see "Token usage, logged locally" below.
 | `.opencode/agent/*.md` | The three agents | When you delegate to one |
 | `.opencode/skills/tdd/` | Red/green/refactor, commit rules, the first-run commit-style bootstrap | Before implementing or reviewing |
 | `.opencode/skills/python-standards/` | The Python rubric | Before writing or reviewing code |
-| `.opencode/skills/grill-me/`, `create-issue/`, `implement-issue/`, `update-issue/` | The optional GitHub-issue workflow | Only when the manager decides one is warranted, and only after asking you |
+| `.opencode/skills/grill-me/`, `create-issue/`, `implement-issue/`, `update-issue/`, `propose-upstream/` | The optional GitHub-issue workflow, local and upstream | Only when the manager decides one is warranted, and only after asking you |
 | `.opencode/commit-style.md` | This repository's own commit convention, learned on first use | Before every commit |
 | `.opencode/scripts/log_usage.py` | The usage logger `/log-usage` runs | Never read directly — run it |
 | `.opencode/token-usage.jsonl` | This deployment's own cost/token history, local and git-ignored | For comparing usage across changes to this layer |
+| `.opencode/layer.json` | Which upstream repo this layer came from, and which tagged version is installed | Before proposing something upstream, or checking for updates |
+| `.opencode/commands/update-layer.md` | The `/update-layer` command | Whenever you want to check for or pull a newer tagged release |
 
 ## The loop
 
@@ -100,8 +104,27 @@ feed a model's own judgment about cost. Local and git-ignored: it never leaves t
 never shows up as a diff. `session list` only surfaces top-level sessions, so a subagent's own
 child session may be missing from the totals; `--session-id` logs one by hand as a fallback.
 
+## Staying up to date, and sending improvements back
+
+This repository is the one place this layer's own definition lives; every project that installed
+it is a snapshot of some tagged version, recorded in `.opencode/layer.json`. Two commands close
+the loop in both directions:
+
+- **`/update-layer`** pulls — it checks the repo named in `layer.json` for a newer tag, and if
+  there is one, downloads that tag's public GitHub archive (no clone, no auth needed for a
+  public repo) and overwrites `.opencode/` and `AGENTS.md` with it, skipping this project's own
+  `.opencode/commit-style.md` and `.opencode/token-usage.jsonl`, which were never part of the
+  layer to begin with. Nothing is committed for you — review the diff like any other change,
+  especially `.opencode/opencode.json` if you've customized its permissions.
+- **`propose-upstream`** *(optional skill)* pushes the other way — when an idea is really about
+  this layer itself (a bug in a skill or agent file, a convention here that doesn't fit, a
+  capability nothing in this layer covers) rather than about the project at hand, it files an
+  issue against the repo named in `layer.json`, the same way `create-issue` files one locally,
+  so the fix can reach every project using this layer instead of staying a one-off workaround
+  here. The manager only reaches for it after asking you, same as the other optional skills.
+
 ## States, deduced and never stored
 
 A request exists only for the length of the conversation that handles it: nothing is tracked as
 draft, open, or in review anywhere outside that conversation. What persists across sessions is
-the code itself, its commit history, and `.opencode/commit-style.md`.
+the code itself, its commit history, `.opencode/commit-style.md`, and `.opencode/layer.json`.
